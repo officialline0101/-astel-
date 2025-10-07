@@ -818,6 +818,7 @@
             <button type="button" onclick="selectSymptom(this, 'treatment1')" data-price="15000">エクスフォリエーション</button>
             <button type="button" onclick="selectSymptom(this, 'treatment2')" data-price="15000">オイルパック</button>
             <button type="button" onclick="selectSymptom(this, 'treatment3')" data-price="15000">フルコース</button>
+            <button type="button" onclick="selectSymptom(this, 'treatment4')" data-price="15000">メイクアップ</button>
         </div>
 
         <div class="label">希望日時<span class="required">必須</span></div>
@@ -913,6 +914,7 @@
         let selectedirradiationsTime = 0; // 訪問回数で選択された時間
 
         let menuTimes = {
+            'メイクアップ': 60,
             'エクスフォリエーション': 90,
             'オイルパック': 90,
             'フルコース': 150
