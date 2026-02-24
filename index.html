@@ -1162,13 +1162,28 @@
 
         <!-- アンケート（初回のみ） -->
         <div id="firstVisitQuestionnaire" style="display: none; margin-top: 30px;">
-            <div class="label">アンケート<span class="required">必須</span></div>
+            <div class="label">事前アンケート<span class="required">必須</span></div>
+            <div
+                style="background-color: #f0f8f6; border: 2px solid #00a683; padding: 15px; margin-bottom: 20px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <p style="margin: 0; line-height: 1.6; font-weight: bold; font-size: 15px; color: #333;">
+                    <i class="fas fa-info-circle"
+                        style="color:#00a683; margin-right:5px; font-size: 18px; vertical-align: middle;"></i>
+                    事前にご回答いただくと、当日のカウンセリング時間が短縮でき、スムーズなご案内が可能となります。<br>ぜひご協力をお願いいたします。
+                </p>
+            </div>
 
             <p style="font-weight: bold; margin-bottom: 5px;">年齢をお答えください。<span class="required">必須</span></p>
             <input type="text" id="age" placeholder="例：30代" oninput="saveInput('age')">
 
             <div class="label">お使いのケアアイテムについて（任意）</div>
-            <p class="small-text" style="font-size: 14px; margin-bottom: 15px; color: #555;">※チェックを入れた順に番号が表示されます。</p>
+            <div
+                style="background-color: #f0f8f6; border: 2px solid #00a683; padding: 15px; margin-bottom: 20px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <p style="margin: 0; line-height: 1.6; font-weight: bold; font-size: 15px; color: #333;">
+                    <i class="fas fa-info-circle"
+                        style="color:#00a683; margin-right:5px; font-size: 18px; vertical-align: middle;"></i>
+                    使用する順に選択して下さい。<br>※チェックを入れた順に番号が表示されます。
+                </p>
+            </div>
 
             <!-- クレンジング -->
             <div class="question-group">
@@ -1466,6 +1481,30 @@
             if (savedName) document.getElementById('name').value = savedName;
             if (savedPhone) document.getElementById('phone').value = savedPhone;
             if (savedaddress) document.getElementById('address').value = savedaddress;
+
+            // アンケートのチェックボックスを復元
+            try {
+                const savedSurveyCheckboxes = JSON.parse(localStorage.getItem('surveyCheckboxes') || '[]');
+                if (savedSurveyCheckboxes.length > 0) {
+                    savedSurveyCheckboxes.forEach(val => {
+                        const cb = document.querySelector(`input[type="checkbox"][value="${val}"]`);
+                        if (cb && !cb.checked) {
+                            cb.checked = true;
+                            if (typeof cb.onchange === 'function') {
+                                cb.onchange({ target: cb });
+                            }
+                        }
+                    });
+                }
+            } catch (e) { console.error('Error restoring survey checkboxes', e); }
+
+            // アンケートのテキスト入力を復元
+            document.querySelectorAll('#firstVisitQuestionnaire input[type="text"]').forEach(input => {
+                if (input.id) {
+                    const savedVal = localStorage.getItem(input.id);
+                    if (savedVal) input.value = savedVal;
+                }
+            });
         });
 
         // スムーズスクロール
@@ -2583,6 +2622,10 @@
                     itemBadge.style.display = 'inline-block';
                 }
             });
+
+            // ローカルストレージに保存
+            const selectedValues = selectionOrder.map(cb => cb.value);
+            localStorage.setItem('surveyCheckboxes', JSON.stringify(selectedValues));
         }
     </script>
 </body>
