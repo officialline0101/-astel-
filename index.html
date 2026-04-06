@@ -523,21 +523,19 @@
         }
 
         #treatment-text {
-            background-color: #f9f9f9;
-            padding: 0px 0px;
-            border: 0px solid #000000;
+            background-color: #f0f8f6;
+            padding: 10px 15px;
+            border: 1px solid #00a683;
             border-top: none;
-            /* ← 上の横線を非表示 */
-            border-radius: 0 0 0px 0px;
-            /* ← 上の角の丸みをなくして自然に */
-            margin-top: 0px;
-            /* ← 少し上に詰める（12px → 4px） */
+            border-radius: 0 0 6px 6px;
+            margin-top: -5px;
+            /* ← ボタンとの隙間を詰める */
+            margin-bottom: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            font-size: 0px;
+            font-size: 15px;
             line-height: 1.6;
-            color: #000000;
+            color: #333333;
             text-align: center;
-            /* ← 中央揃え */
         }
 
         .highlight-background {
@@ -1087,7 +1085,7 @@
         <div class="info-text">※初回の方はなしと入力ください</div>
         <input type="text" id="address" placeholder="担当者名を入力してください" oninput="saveInput('address')">
 
-        <div id="treatment-text" style="display: none; margin-bottom: 10px;"></div>
+
 
         <div class="label" id="course">メニューをお選びください<span class="required">必須</span></div>
         <div class="menu-sections">
@@ -1757,9 +1755,9 @@
                 }
 
                 /* -----------------------
-                   ★日曜はスキップ（元の仕様）
+                   ★日曜・月曜はスキップ
                    ----------------------- */
-                if (wd !== 0) {
+                if (wd !== 0 && wd !== 1) {
                     const label = `${y}/${m}/${day}（${JP_WD[wd]}）`;
 
                     const opt = document.createElement('option');
@@ -1943,24 +1941,20 @@
             // カレンダーを更新するために取得する日付を渡す
             fetchAvailability(currentDate);
 
-            if (treatmentId === 'treatment1') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：90分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：6,500円<br>初診料：＋2,200円</strong></div>`;
-            } else if (treatmentId === 'treatment2') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：60分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：4,500円<br>初診料：＋2,200円</strong></div>`;
-            } else if (treatmentId === 'treatment3') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：120分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：8,700円<br>初診料：＋2,200円</strong></div>`;
-            } else if (treatmentId === 'treatment4') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：30分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：1,700円<br>初診料：＋2,200円</strong></div>`;
-            } else if (treatmentId === 'treatment5') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：60分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：6,500円</strong></div>`;
-            } else if (treatmentId === 'treatment6') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：30分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：4,500円</strong></div>`;
-            } else if (treatmentId === 'treatment7') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：90分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：8,700円</strong></div>`;
-            } else if (treatmentId === 'treatment8') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：15分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：1,700円</strong></div>`;
-            } else if (treatmentId === 'treatment9') {
-                treatmentText.innerHTML = `<div style="text-align: left;"><strong>所要時間：15分</strong><br>※症状によりお時間が前後する場合がございます</div><div style="text-align: right;"><strong>料金：1,700円</strong></div>`;
+            // 料金情報の定義
+            const priceMap = {
+                'treatment1': { price: '3,300円（税込）' },
+                'treatment2': { price: '2,200円（税込）' },
+                'treatment3': { price: '5,500円（税込）' },
+                'treatment5': { price: '4,400円（税込）' },
+                'treatment6': { price: '5,500円（税込）' },
+                'treatment7': { price: '5,500円（税込）' },
+                'treatment8': { price: '3,300円（税込）' }
+            };
+
+            // 「1回目」選択時のみ料金を表示
+            if (visitCount === '1回目' && priceMap[treatmentId]) {
+                treatmentText.innerHTML = `<div style="text-align: center; padding: 8px 0;"><strong>料金：${priceMap[treatmentId].price}</strong></div>`;
             } else {
                 treatmentText.innerHTML = '';
             }
