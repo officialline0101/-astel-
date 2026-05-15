@@ -255,6 +255,58 @@
             /* ← 上に5pxずらす（数値調整OK） */
         }
 
+        /* ── 担当者選択プルダウン カスタムスタイル ── */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .custom-select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #00a683;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-select-wrapper select {
+            width: 100%;
+            padding: 13px 44px 13px 16px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            color: #141414;
+            background-color: #fdfdfd;
+            border: 1px solid #222222;
+            border-left: 4px solid #00a683;
+            border-radius: 3px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.2s ease;
+            outline: none;
+        }
+
+        .custom-select-wrapper select:focus {
+            border-color: #00a683;
+            border-left-width: 4px;
+            box-shadow: 0 0 0 3px rgba(0, 166, 131, 0.18);
+            background-color: #f0faf7;
+        }
+
+        .custom-select-wrapper select option[value=""] {
+            color: #999;
+        }
+
         .visit-buttons,
         .symptoms,
         .menu-sections,
@@ -1081,9 +1133,32 @@
             <button type="button" id="repeatVisit" onclick="selectVisit(this)">2回目以降</button>
         </div>
 
-        <div class="label">担当者名<span class="required">必須</span></div>
-        <div class="info-text">※初回の方はなしと入力ください</div>
-        <input type="text" id="address" placeholder="担当者名を入力してください" oninput="saveInput('address')">
+        <div class="label">担当者をお選びください<span class="required">必須</span></div>
+        <div class="info-text">初回の方は指名なしをお選びください</div>
+        <div class="custom-select-wrapper">
+            <select id="address" onchange="saveInput('address')">
+                <option value="" hidden selected>担当者を選択してください</option>
+                <option value="指名なし">指名なし</option>
+                <option value="めぐ">めぐ</option>
+                <option value="志穂">志穂</option>
+                <option value="舞華">舞華</option>
+                <option value="京香">京香</option>
+                <option value="希望">希望</option>
+                <option value="雅子">雅子</option>
+                <option value="美奈">美奈</option>
+                <option value="栞">栞</option>
+                <option value="瑞希">瑞希</option>
+                <option value="菜々美">菜々美</option>
+                <option value="摩綾">摩綾</option>
+                <option value="美雪">美雪</option>
+                <option value="美空">美空</option>
+                <option value="結菜">結菜</option>
+                <option value="亜美">亜美</option>
+                <option value="憲哉">憲哉</option>
+                <option value="更砂">更砂</option>
+                <option value="絵理奈">絵理奈</option>
+            </select>
+        </div>
 
 
 
@@ -1478,7 +1553,13 @@
 
             if (savedName) document.getElementById('name').value = savedName;
             if (savedPhone) document.getElementById('phone').value = savedPhone;
-            if (savedaddress) document.getElementById('address').value = savedaddress;
+            if (savedaddress) {
+                const addressSelect = document.getElementById('address');
+                // select要素の場合は一致するoptionを選択する
+                if (addressSelect && [...addressSelect.options].some(o => o.value === savedaddress)) {
+                    addressSelect.value = savedaddress;
+                }
+            }
 
             // アンケートのチェックボックスを復元
             try {
@@ -2166,7 +2247,7 @@
             }
 
             if (!formData.address) {
-                alert('担当者名※必須を入力してください。');
+                alert('担当者をお選びください。');
                 return;
             }
 
